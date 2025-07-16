@@ -6,7 +6,9 @@ class DataHandler:
         self.filename = filename
 
         self.dict_entities = {
-            "entities": []
+            "entities": [],
+            "User":[],
+            "Ride":[]
         }
         self.load_data()
 
@@ -25,9 +27,14 @@ class DataHandler:
                 self.dict_entities[k] = []
 
     def add_entity(self, name_entity, entity):
-
-        if name_entity in self.dict_entities:
+        if name_entity not in self.dict_entities:
+            self.dict_entities[name_entity] = []
+        if hasattr(entity, 'to_dict') and callable(entity.to_dict):
             self.dict_entities[name_entity].append(entity.to_dict())
+        elif isinstance(entity, dict):
+            self.dict_entities[name_entity].append(entity)
+        else:
+            raise TypeError("Entidad no válida: debe ser un dict o tener .to_dict()")
 
 
     def _get_by_filter(self, entities,filters):
