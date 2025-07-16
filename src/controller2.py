@@ -297,26 +297,22 @@ def join_ride(rideId):
         if not alias or not destination:
             return jsonify({"error": "Alias y destino son requeridos"}), 400
 
-        # Buscar el viaje
         listaViajes = data_handler.get_entities("Ride") or []
         ride = next((r for r in listaViajes if r.get("id") == rideId), None)
 
         if not ride:
             return jsonify({"error": "Viaje no encontrado"}), 404
 
-        # Buscar el usuario
         listaUsuarios = data_handler.get_entities("User") or []
         datosUsuario = next((u for u in listaUsuarios if u["alias"] == alias), None)
 
         if not datosUsuario:
             return jsonify({"error": "Usuario no encontrado"}), 404
 
-        # Verificar espacios disponibles
         espaciosOcupados = sum(p.get("occupiedSpaces", 1) for p in ride.get("participants", []))
         if espaciosOcupados + occupiedSpaces > ride.get("allowedSpaces"):
             return jsonify({"error": "No hay espacios suficientes disponibles"}), 422
 
-        # Crear participación
         usuario = User(
             alias=datosUsuario["alias"],
             name=datosUsuario["name"],
@@ -331,7 +327,6 @@ def join_ride(rideId):
             status="confirmed"
         )
 
-        # Agregar participación al viaje
         ride["participants"].append(participation.to_dict())
         data_handler.save_data()
 
@@ -357,14 +352,12 @@ def update_participant_status(rideId, alias):
         if new_status not in valid_statuses:
             return jsonify({"error": f"Estado no válido. Estados permitidos: {valid_statuses}"}), 400
 
-        # Buscar el viaje
         listaViajes = data_handler.get_entities("Ride") or []
         ride = next((r for r in listaViajes if r.get("id") == rideId), None)
 
         if not ride:
             return jsonify({"error": "Viaje no encontrado"}), 404
 
-        # Buscar y actualizar participación
         participantes = ride.get("participants", [])
         participante_encontrado = False
 
