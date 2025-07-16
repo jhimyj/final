@@ -32,7 +32,7 @@ class User:
     def _init_(self, alias: str, name: str, car_plate: Optional[str] = None):
         self.alias = alias
         self.name = name
-        self.car_plate = car_plate  # Can be null for participants
+        self.car_plate = car_plate  
         self.rides: List['Ride'] = []
 
 
@@ -68,24 +68,18 @@ class DataHandler:
         return [ride for ride in self.rides if ride.ride_driver == driver]
 
 
-# Ejemplo de uso
 if _name_ == "_main_":
-    # Crear el manejador de datos
     data_handler = DataHandler()
 
-    # Crear usuarios
     driver = User("john_doe", "John Doe", "ABC-123")
     passenger = User("jane_smith", "Jane Smith")
 
-    # Agregar usuarios
     data_handler.add_user(driver)
     data_handler.add_user(passenger)
 
-    # Crear un viaje
-    ride_date = datetime(2024, 7, 20, 8, 0)  # 20 julio 2024, 8:00 AM
+    ride_date = datetime(2024, 7, 20, 8, 0) 
     ride = Ride(ride_date, "Downtown Office", 4, driver, RideStatus.READY)
 
-    # Crear participación
     participation = RideParticipation(
         confirmation=datetime.now(),
         destination="Downtown Office",
